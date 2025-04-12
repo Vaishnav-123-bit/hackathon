@@ -14,7 +14,7 @@ const Login = () => {
   
 
   return (
-    <div>
+    <div style={{display:'block' ,justifyContent:'center',alignItems:'center'}}>
       <h2>Login</h2>
       <input 
         type="text" 

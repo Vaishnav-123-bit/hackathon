@@ -1,42 +1,69 @@
 import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
-import LoginModal from "./LoginModal"; // ✅ import the modal
 
-const Navbar = () => {
-  const { user, login } = useUser();
+const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks }) => {
+  const { user } = useUser();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const handleAuthAction = () => {
+    if (user) {
+      alert("Redirecting to raise query form...");
+    } else {
+      setShowLoginModal(true);
+    }
+  };
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ padding: "0.8rem" }}>
-        <a className="navbar-brand" href="#" style={{ fontWeight: 600, fontSize: "1.2rem" }}>
-          myApp
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 position-sticky top-0 " style={{ zIndex: 9999 }}>
+        <a className="navbar-brand fw-bold fs-3" href="#">
+          Fake<span style={{ color: "red" }}>C</span>heck<span style={{ color: "red" }}>!</span>
         </a>
+
         <button
           className="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbarNavDropdown"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon" />
         </button>
+
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link" href="#">
-                Home <span className="sr-only">(current)</span>
+          <ul className="navbar-nav mx-auto gap-lg-4 text-center">
+            <li className="nav-item">
+              <a
+                className="nav-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                Home
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Features
-              </a>
+              <span className="nav-link" onClick={scrollToAboutUs} style={{ cursor: "pointer" }}>
+                About
+              </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Pricing
+              {/* Use onClick for triggering the scroll */}
+              <a
+                className="nav-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToHowItWorks(); // Trigger smooth scroll to "How it Works" section
+                }}
+              >
+                How it Works
               </a>
             </li>
             <li className="nav-item dropdown">
@@ -44,30 +71,154 @@ const Navbar = () => {
                 className="nav-link dropdown-toggle"
                 href="#"
                 id="navbarDropdownMenuLink"
-                data-toggle="dropdown"
-                aria-haspopup="true"
+                role="button"
+                data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Dropdown link
+                Team
               </a>
-              <div
-                className="dropdown-menu"
-                aria-labelledby="navbarDropdownMenuLink"
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a className="dropdown-item" href="#">Action</a></li>
+                <li><a className="dropdown-item" href="#">Another action</a></li>
+                <li><a className="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">FAQs</a>
+            </li>
+            <li className="nav-item">
+              <span
+                className="nav-link fw-bold"
+                onClick={scrollToMainSection}
+                style={{ cursor: "pointer", color: "red" }}
               >
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </div>
+                #FactCheck
+              </span>
             </li>
           </ul>
+
+          <div className="d-flex justify-content-center">
+            <button
+              className="btn btn-primary px-4 py-2 fw-semibold"
+              style={{ fontSize: "14px" }}
+              onClick={handleAuthAction}
+            >
+              Create a Case
+            </button>
+          </div>
         </div>
       </nav>
+
+      {/* Modal */}
+      {showLoginModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "1.5rem",
+              borderRadius: "8px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+              minWidth: "90%",
+              maxWidth: "400px",
+              textAlign: "center",
+              position: "relative",
+            }}
+          >
+            <button
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                border: "none",
+                background: "none",
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "#333",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowLoginModal(false)}
+            >
+              ×
+            </button>
+
+            <h2 style={{ marginBottom: "1rem", fontSize: "24px", fontWeight: 800 }}>
+              {isSignUp ? "Sign Up" : "Login"}
+            </h2>
+
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",
+                width: "100%",
+              }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert(`${isSignUp ? "Signed up!" : "Logged in!"}`);
+                setShowLoginModal(false);
+              }}
+            >
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+                className="form-control"
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+                className="form-control"
+              />
+
+              {isSignUp && (
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Full Name"
+                  required
+                  className="form-control"
+                />
+              )}
+
+              <button
+                type="submit"
+                className={`btn ${isSignUp ? "btn-success" : "btn-primary"} fw-semibold`}
+              >
+                {isSignUp ? "Sign Up" : "Login"}
+              </button>
+            </form>
+
+            <p
+              style={{
+                marginTop: "1rem",
+                cursor: "pointer",
+                color: "#007bff",
+              }}
+              onClick={() => setIsSignUp(!isSignUp)}
+            >
+              {isSignUp
+                ? "Already have an account? Login"
+                : "Don't have an account? Sign Up"}
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 };
