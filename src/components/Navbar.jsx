@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
 
-const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks }) => {
+const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks,scrollToWhatsApp }) => {
   const { user } = useUser();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [activeSection, setActiveSection] = useState(""); // Track active section
 
   const handleAuthAction = () => {
     if (user) {
@@ -14,12 +15,16 @@ const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks }) =>
     }
   };
 
+  const handleNavClick = (section) => {
+    setActiveSection(section);
+  };
+
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 position-sticky top-0 " style={{ zIndex: 9999 }}>
-        <a className="navbar-brand fw-bold fs-3" href="#">
-          Fake<span style={{ color: "red" }}>C</span>heck<span style={{ color: "red" }}>!</span>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 position-sticky top-0" style={{ zIndex: 9999 }}>
+        <a className="navbar-brand  " href="#" style={{fontWeight:800,fontSize:"24px"}}>
+          Fake<span style={{ color: "red" }}>C</span>heck<span style={{ color: "red" }}> !</span>
         </a>
 
         <button
@@ -38,34 +43,44 @@ const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks }) =>
           <ul className="navbar-nav mx-auto gap-lg-4 text-center">
             <li className="nav-item">
               <a
-                className="nav-link"
+                className={`nav-link ${activeSection === "home" ? "border-bottom border-3 border-danger" : ""}`}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   window.scrollTo({ top: 0, behavior: "smooth" });
+                  handleNavClick("home");
                 }}
               >
                 Home
               </a>
             </li>
             <li className="nav-item">
-              <span className="nav-link" onClick={scrollToAboutUs} style={{ cursor: "pointer" }}>
+              <span
+                className={`nav-link ${activeSection === "about" ? "border-bottom border-3 border-danger" : ""}`}
+                onClick={() => {
+                  scrollToAboutUs();
+                  handleNavClick("about");
+                }}
+                style={{ cursor: "pointer" }}
+              >
                 About
               </span>
             </li>
             <li className="nav-item">
-              {/* Use onClick for triggering the scroll */}
               <a
-                className="nav-link"
+                className={`nav-link ${activeSection === "howItWorks" ? "border-bottom border-3 border-danger" : ""}`}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToHowItWorks(); // Trigger smooth scroll to "How it Works" section
+                  handleNavClick("howItWorks");
                 }}
               >
                 How it Works
               </a>
             </li>
+         
+
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
@@ -84,7 +99,17 @@ const Navbar = ({ scrollToMainSection, scrollToAboutUs, scrollToHowItWorks }) =>
               </ul>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">FAQs</a>
+              <a
+                className={`nav-link ${activeSection === "whatsApp" ? "border-bottom border-3 border-danger" : ""}`}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToWhatsApp() // Trigger smooth scroll to "How it Works" section
+                  handleNavClick("whatsApp");
+                }}
+              >
+              WhatsApp
+              </a>
             </li>
             <li className="nav-item">
               <span

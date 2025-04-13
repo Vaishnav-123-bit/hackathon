@@ -2,6 +2,8 @@ import React, { forwardRef, useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import imagenew from "../assets/security.png";
 import web from "../assets/new.jpg";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const MoreAboutUs = forwardRef((props, ref) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
@@ -10,6 +12,10 @@ const MoreAboutUs = forwardRef((props, ref) => {
     const handleResize = () => setIsMobile(window.innerWidth <= 600);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
   }, []);
 
   const mainContainerStyle = {
@@ -34,17 +40,20 @@ const MoreAboutUs = forwardRef((props, ref) => {
           marginTop: "50px",
           color: "red",
         }}
+        data-aos="fade-down"
       >
-        More About Us !
+        More About Us!
       </p>
 
-      {/* Bootstrap responsive wrapper */}
       <div ref={ref} className="container-fluid">
-        <div className="row align-items-center justify-content-center" style={mainContainerStyle}>
+        <div
+          className="row align-items-center justify-content-center"
+          style={mainContainerStyle}
+        >
           {/* Left Column */}
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-6" data-aos="fade-right">
             <h5 style={{ color: "red", fontWeight: 600 }}>Who are We ?</h5>
-            <p style={{ fontWeight: 500, fontSize: "14px" }}>
+            <p style={{ fontWeight: 500, fontSize: "16px",color:"black" }}>
               LoopHoles is a proprietary research initiative at the forefront of
               innovation in detecting audiovisual and textual misinformation
               generated from various sources with a high degree of accuracy.
@@ -67,6 +76,7 @@ const MoreAboutUs = forwardRef((props, ref) => {
                   justifyContent: "start",
                   flexDirection: "column",
                   gap: "0.5rem",
+                  color:"black"
                 }}
               >
                 {["Accurate", "Reliable", "Fast"].map((item, index) => (
@@ -75,10 +85,12 @@ const MoreAboutUs = forwardRef((props, ref) => {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      fontWeight: 400,
+                      fontWeight: 600,
                       fontSize: "16px",
                       color: "#2c3e50",
                     }}
+                    data-aos="fade-up"
+                    data-aos-delay={index * 100}
                   >
                     <FaCheckCircle style={{ color: "red", marginRight: "8px" }} />
                     {item}
@@ -100,10 +112,12 @@ const MoreAboutUs = forwardRef((props, ref) => {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      fontWeight: 400,
+                      fontWeight: 600,
                       fontSize: "16px",
                       color: "#2c3e50",
                     }}
+                    data-aos="fade-up"
+                    data-aos-delay={index * 100 + 300}
                   >
                     <FaCheckCircle style={{ color: "red", marginRight: "8px" }} />
                     {item}
@@ -122,22 +136,58 @@ const MoreAboutUs = forwardRef((props, ref) => {
                 marginTop: "2rem",
                 gap: "0.8rem",
               }}
+              data-aos="fade-up"
+              data-aos-delay="700"
             >
               <img src={imagenew} alt="" style={{ width: "50px", height: "auto" }} />
-              <div style={{ padding: "0" }}>
-                <p style={{ fontWeight: 600, fontSize: "14px" }}>+91 - 9876543210</p>
-                <p style={{ fontWeight: 600, fontSize: "14px", marginTop: "-15px" }}>Cyber Cell</p>
+              <div style={{ padding: "0" ,color:"black"}}>
+                <p style={{ fontWeight: 600, fontSize: "14px",color:"black" }}>+91 - 9876543210</p>
+                <p
+                  style={{
+                    fontWeight: 600,
+                    fontSize: "14px"
+                    ,color:"black",
+                    marginTop: "-15px",
+                  }}
+                >
+                  Cyber Cell
+                </p>
               </div>
+            </div>
+            <div
+              style={{ fontWeight: 600, fontSize: "14px", marginTop: "1rem" }}
+              data-aos="fade-up"
+              data-aos-delay="800"
+            >
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+              cupiditate officiis ex accusantium perspiciatis corporis, deserunt
+              ea eaque debitis consequuntur architecto ullam officia? Adipisci
+              pariatur laborum delectus sint praesentium repellat?
             </div>
           </div>
 
           {/* Right Column */}
-          <div className="col-12 col-md-6 text-center mt-4 mt-md-0">
+          <div
+            className="col-12 col-md-6 text-center mt-4 mt-md-0"
+            data-aos="zoom-in"
+          >
             <div style={{ position: "relative" }}>
-              <img src={web} alt="main-img" style={{ maxWidth: "80%", height: "auto" }} />
+              <img
+                src={web}
+                alt="main-img"
+                style={{ maxWidth: "80%", height: "auto" }}
+              />
             </div>
-            <div style={{ position: "relative", left: -20, bottom: 100, right: 0 }}>
-              <img src={web} alt="overlay-img" style={{ width: "150px", height: "80px" }} />
+            <div
+              style={{ position: "relative", left: -20, bottom: 100, right: 0 }}
+              data-aos="zoom-in"
+              data-aos-delay="400"
+            >
+              <img
+                src={web}
+                alt="overlay-img"
+                style={{ width: "150px", height: "80px" }}
+              />
             </div>
           </div>
         </div>

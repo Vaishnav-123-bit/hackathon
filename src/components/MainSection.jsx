@@ -23,11 +23,21 @@ const MainSection = forwardRef((props, ref) => {
     { key: "audio", label: "Audio", icon: <FaMicrophoneAlt /> },
     { key: "video", label: "Video", icon: <FaVideo /> },
   ];
-
+console.log(activeSection)
   // const processText = (text) => { /* Your logic */ };
 const processImage = (image) => { /* Your logic */ };
-const processAudio = (audio) => { /* Your logic */ };
-const processVideo = (video) => { /* Your logic */ };
+// const processAudio = (audio) => { /* Your logic */ };
+const processAudio = (file) => {
+  console.log("Processing audio file:", file);
+  // API call or logic goes here
+};
+
+const processVideo = (file) => { /* Your logic */
+  console.log("hello",file)
+  
+ };
+
+
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 600);
@@ -42,11 +52,23 @@ const processVideo = (video) => { /* Your logic */ };
   }, []);
 
   const handleAnalyze = () => {
-    if (activeSection === "text" && textInput.trim()) {
-      processText(textInput); // Pass the text input to processText function when analyzing
+    // Validation
+    if (activeSection === "text" && !textInput.trim()) {
+      alert("Please enter some input before analyzing.");
+      return;
+    }
+  
+    if (["image", "video", "audio"].includes(activeSection) && !fileInput) {
+      alert("Please upload a file before analyzing.");
+      return;
+    }
+  
+    // Analysis Progress Simulation
+    const runAnalysis = (type) => {
       setLoading(true);
       setProgress(0);
       setLoadingText("Initializing analysis...");
+  
       const interval = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev + 10;
@@ -58,18 +80,89 @@ const processVideo = (video) => { /* Your logic */ };
           }
           if (newProgress === 25)
             setLoadingText("25% complete: Preparing data...");
-          if (newProgress === 50) setLoadingText("50% complete: Analyzing...");
+          if (newProgress === 50)
+            setLoadingText("50% complete: Analyzing...");
           if (newProgress === 75)
             setLoadingText("75% complete: Almost there...");
           return newProgress;
         });
       }, 500);
-    } else {
-      alert("Please enter some text before analyzing.");
-    }
+  
+      // Call the appropriate process function
+      switch (type) {
+        case "text":
+          processText(textInput);
+          break;
+        case "image":
+          processImage(fileInput);
+          break;
+        case "video":
+          processVideo(fileInput);
+          break;
+        case "audio":
+          processAudio(fileInput);
+          break;
+        default:
+          alert("Unsupported content type.");
+      }
+    };
+  
+    // Trigger analysis
+    runAnalysis(activeSection);
   };
+  
+
+  
+  
+  const [fileInput, setFileInput] = useState(null);
 
   const renderInputField = () => {
+    // switch (activeSection) {
+    //   case "text":
+    //     return (
+    //       <>
+    //         <div style={headingStyle}>
+    //           <FaTextHeight /> Text Input
+    //         </div>
+    //         <textarea
+    //           placeholder="Type your message..."
+    //           rows={6}
+    //           style={inputStyle}
+    //           value={textInput} // Bind the text input to the state
+    //           onChange={(e) => setTextInput(e.target.value)} // Update the state on text change
+    //         />
+    //       </>
+    //     );
+    //   case "image":
+    //     return (
+    //       <>
+    //         <div style={headingStyle}>
+    //           <FaImage /> Upload Image
+    //         </div>
+    //         <input type="file" accept="image/*" style={inputStyle} />
+    //       </>
+    //     );
+    //   case "audio":
+    //     return (
+    //       <>
+    //         <div style={headingStyle}>
+    //           <FaMicrophoneAlt /> Upload Audio
+    //         </div>
+    //         <input type="file" accept="audio/*" style={inputStyle} />
+    //       </>
+    //     );
+    //   case "video":
+    //     return (
+    //       <>
+    //         <div style={headingStyle}>
+    //           <FaVideo /> Upload Video
+    //         </div>
+    //         <input type="file" accept="video/*" style={inputStyle} />
+    //       </>
+    //     );
+    //   default:
+    //     return null;
+    // }
     switch (activeSection) {
       case "text":
         return (
@@ -81,41 +174,61 @@ const processVideo = (video) => { /* Your logic */ };
               placeholder="Type your message..."
               rows={6}
               style={inputStyle}
-              value={textInput} // Bind the text input to the state
-              onChange={(e) => setTextInput(e.target.value)} // Update the state on text change
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
             />
           </>
         );
+    
       case "image":
         return (
           <>
             <div style={headingStyle}>
               <FaImage /> Upload Image
             </div>
-            <input type="file" accept="image/*" style={inputStyle} />
+            <input
+              type="file"
+              accept="image/*"
+              style={inputStyle}
+              onChange={(e) => setFileInput(e.target.files[0])}
+            />
           </>
         );
+    
       case "audio":
         return (
           <>
             <div style={headingStyle}>
               <FaMicrophoneAlt /> Upload Audio
             </div>
-            <input type="file" accept="audio/*" style={inputStyle} />
+            <input
+              type="file"
+              accept="audio/*"
+              style={inputStyle}
+              onChange={(e) => setFileInput(e.target.files[0])}
+            />
           </>
         );
+    
       case "video":
         return (
           <>
             <div style={headingStyle}>
               <FaVideo /> Upload Video
             </div>
-            <input type="file" accept="video/*" style={inputStyle} />
+            <input
+              type="file"
+              accept="video/*"
+              style={inputStyle}
+              onChange={(e) => setFileInput(e.target.files[0])}
+            />
           </>
         );
+    
       default:
         return null;
     }
+    
   };
   const [fakeNewResult, setFakeNewsResult] = useState(null);
   const [textResult, setTextResult] = useState("");
@@ -194,6 +307,8 @@ const processVideo = (video) => { /* Your logic */ };
       setLoading(false);
     }
   };
+
+
   const stopProcessingAnimation = () => {
     setAnimating(false); // Stops the animation
     setProgress(100); // Optionally, set the progress to 100 to show completion
@@ -323,6 +438,7 @@ const processVideo = (video) => { /* Your logic */ };
             marginBottom: "4rem",
             fontWeight: 600,
             fontSize: "14px",
+            color:"black"
           }}
         >
           Make use of highly efficient <span style={{ color: "red" }}>AI</span>{" "}
